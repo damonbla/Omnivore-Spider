@@ -75,5 +75,5 @@ Plugins/**/Intermediate/*
 DerivedDataCache/*
 
 # Megascans are too big to commit to git
-Megascans/*
+Content/Megascans/*
 
