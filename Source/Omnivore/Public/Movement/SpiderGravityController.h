@@ -24,6 +24,9 @@ public:
 	UFUNCTION(BlueprintPure)
 	static FRotator GetGravityWorldRotation(FRotator Rotation, FVector GravityDirection);
 
+	UFUNCTION(BlueprintCallable)
+	void GravityDownSlowly(float DeltaTime);
+
 private:
 	FVector LastFrameGravity = FVector::ZeroVector;
 };

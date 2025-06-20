@@ -25,6 +25,7 @@ void ASpiderGravityController::UpdateRotation(float DeltaTime)
 
 		ViewRotation = WarpedCameraRotation.Rotator();
 	}
+
 	LastFrameGravity = GravityDirection;
 
 	// Convert the view rotation from world space to gravity relative space.
@@ -36,7 +37,7 @@ void ASpiderGravityController::UpdateRotation(float DeltaTime)
 
 	if (PlayerCameraManager)
 	{
-		ACharacter* PlayerCharacter = Cast<ACharacter>(GetPawn());
+		//ACharacter* PlayerCharacter = Cast<ACharacter>(GetPawn());
 
 		PlayerCameraManager->ProcessViewRotation(DeltaTime, ViewRotation, DeltaRot);
 
@@ -44,7 +45,10 @@ void ASpiderGravityController::UpdateRotation(float DeltaTime)
 		ViewRotation.Roll = 0;
 
 		// Convert the rotation back to world space, and set it as the current control rotation.
-		SetControlRotation(GetGravityWorldRotation(ViewRotation, GravityDirection));
+		FRotator GravityWorld = GetGravityWorldRotation(ViewRotation, GravityDirection);
+		//FRotator SlowRotate = FMath::RInterpTo(GetControlRotation(), GravityWorld, DeltaTime, 2.0);
+
+		SetControlRotation(GravityWorld);
 	}
 
 	APawn* const P = GetPawnOrSpectator();
@@ -74,4 +78,14 @@ FRotator ASpiderGravityController::GetGravityWorldRotation(FRotator Rotation, FV
 	}
 
 	return Rotation;
+}
+
+void ASpiderGravityController::GravityDownSlowly(float DeltaTime) {
+	// Get the current control rotation in world space
+	FRotator ViewRotation = GetControlRotation();
+	FRotator Down = FRotator(-90.f, 0.f, 0.f);
+
+	FRotator SlowRotate = FMath::RInterpTo(ViewRotation, Down, DeltaTime, 2.0);
+
+	SetControlRotation(SlowRotate);
 }

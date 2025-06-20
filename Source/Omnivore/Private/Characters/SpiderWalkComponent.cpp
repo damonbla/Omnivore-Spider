@@ -143,8 +143,7 @@ void USpiderWalkComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 }
 
 
-
 void USpiderWalkComponent::ChangeGravity(FVector ToGravity, float DeltaTime) {
-	TargetGravity = FMath::VInterpTo(TargetGravity, ToGravity, DeltaTime, 20.0);
+	TargetGravity = FMath::VInterpTo(TargetGravity, ToGravity, DeltaTime, 10.0);
 }
 

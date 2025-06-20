@@ -19,7 +19,7 @@ class OMNIVORE_API UWebRopeComponent : public UActorComponent
 
 	class AWebAttachmentPoint* RopeAttachmentPoint;
 
-	class USkeletalMeshComponent* PhysicsBody;
+	class USkeletalMeshComponent* SpiderSkeleton;
 
 	void SetPositionOnRope();
 

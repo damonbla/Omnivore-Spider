@@ -25,7 +25,7 @@ void UWebRopeComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	PhysicsBody = GetOwner()->FindComponentByClass<USkeletalMeshComponent>();
+	SpiderSkeleton = GetOwner()->FindComponentByClass<USkeletalMeshComponent>();
 
 	ClimbStartSpeed = ClimbSpeed;
 }
@@ -53,7 +53,7 @@ void UWebRopeComponent::StartWeb() {
 	RopeAttachmentPoint = GetWorld()->SpawnActor<AWebAttachmentPoint>(AWebAttachmentPoint::StaticClass(), SpawnLocation, FRotator::ZeroRotator, SpawnParams);
 
 	// create a new cablecomponent
-	UCableComponent* WebRope = Cast<UCableComponent>(GetOwner()->AddComponentByClass(UCableComponent::StaticClass(), false, FTransform::Identity, true));
+	UCableComponent* WebRope = Cast<UCableComponent>(GetOwner()->AddComponentByClass(UCableComponent::StaticClass(), false, FTransform::Identity, false));
 
 	// rope settings
 	WebRope->CableLength = WebRopeStartLength;
@@ -95,7 +95,17 @@ void UWebRopeComponent::SetPositionOnRope() {
 
 		FVector PositionOnRope = FMath::Lerp(PointUnder, PointOver, PositionBetweenPoints);
 
-		OwnerRef->SetActorLocation(PositionOnRope);
+		// Attach web to the location of the spinner
+		FVector SpinnerLocation{ SpiderSkeleton->GetSocketLocation("Abdomen-Bone") };
+		FVector SpiderBoneOffset{ SpinnerLocation - OwnerRef->GetActorLocation() };
+		FVector ActualPositionOnRope{ PositionOnRope - SpiderBoneOffset };
+
+		OwnerRef->SetActorLocation(ActualPositionOnRope);
+
+		// The animation has the spider pointed up, so we rotate here
+		FRotator UpsideDownRotation = FRotator(180.0f, 0.0f, 0.0f);
+
+		OwnerRef->SetActorRotation(UpsideDownRotation);
 	}
 }
 
